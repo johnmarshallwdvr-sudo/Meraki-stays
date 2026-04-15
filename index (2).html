@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meraki Stays | Premium Vacation Rentals Near NYC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #2d2d2d;
+            --accent: #b8975a;
+            --accent-light: #d4b87a;
+            --accent-dark: #9a7d4a;
+            --teal: #2d6a6a;
+            --sage: #7a9a7a;
+            --white: #ffffff;
+            --off-white: #f8f7f5;
+            --cream: #faf9f6;
+            --gray: #6b6b6b;
+            --light-gray: #e8e6e3;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: var(--off-white);
+            color: var(--primary);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5 { font-family: 'Playfair Display', serif; font-weight: 500; }
+
+        a { text-decoration: none; color: inherit; }
+
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 5%; }
+
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
+            transition: all 0.4s ease;
+        }
+        .navbar.scrolled { background: rgba(255,255,255,0.98); padding: 15px 5%; box-shadow: 0 2px 30px rgba(0,0,0,0.08); }
+        .navbar.scrolled .logo, .navbar.scrolled .nav-links a { color: var(--primary); }
+        .logo { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 600; color: var(--white); letter-spacing: 2px; }
+        .nav-links { display: flex; gap: 35px; list-style: none; }
+        .nav-links a { color: var(--white); font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; transition: color 0.3s ease; position: relative; }
+        .nav-links a:hover { color: var(--accent); }
+        .nav-cta { background: var(--accent); color: var(--white) !important; padding: 10px 25px; border-radius: 2px; }
+
+        .hero { position: relative; height: 100vh; min-height: 650px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.55) 100%); z-index: -1; }
+        .hero-content { text-align: center; color: var(--white); max-width: 850px; padding: 0 20px; z-index: 1; }
+        .hero-subtitle { font-size: 13px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px; color: var(--accent-light); font-weight: 500; }
+        .hero-title { font-size: clamp(42px, 7vw, 72px); font-weight: 400; line-height: 1.1; margin-bottom: 25px; letter-spacing: 2px; }
+        .hero-description { font-size: 17px; font-weight: 300; max-width: 550px; margin: 0 auto 35px; line-height: 1.8; color: rgba(255,255,255,0.9); }
+        .hero-cta { display: inline-flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+
+        .btn { padding: 14px 35px; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border: none; cursor: pointer; transition: all 0.4s ease; }
+        .btn-primary { background: var(--accent); color: var(--white); }
+        .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); }
+        .btn-secondary { background: transparent; color: var(--white); border: 1px solid var(--white); }
+        .btn-secondary:hover { background: var(--white); color: var(--primary); }
+
+        .booking-widget { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); background: var(--white); padding: 25px 35px; border-radius: 4px 4px 0 0; box-shadow: 0 -10px 50px rgba(0,0,0,0.15); display: flex; gap: 3px; flex-wrap: wrap; max-width: 1000px; width: 92%; justify-content: center; z-index: 10; }
+        .booking-field { display: flex; flex-direction: column; padding: 0 18px; border-right: 1px solid var(--light-gray); }
+        .booking-field:last-of-type { border-right: none; }
+        .booking-field label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray); margin-bottom: 6px; font-weight: 600; }
+        .booking-field input, .booking-field select { border: none; font-family: 'Lato', sans-serif; font-size: 13px; color: var(--primary); background: transparent; outline: none; min-width: 130px; padding: 4px 0; cursor: pointer; }
+        .booking-submit { background: var(--primary); color: var(--white); border: none; padding: 0 30px; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; }
+        .booking-submit:hover { background: var(--teal); }
+
+        .section { padding: 100px 0; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-subtitle { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; font-weight: 600; }
+        .section-title { font-size: clamp(32px, 4vw, 46px); font-weight: 400; margin-bottom: 18px; }
+        .section-line { width: 50px; height: 1px; background: var(--accent); margin: 0 auto; }
+
+        .badges-section { background: var(--cream); padding: 50px 0; }
+        .badges-container { display: flex; justify-content: center; align-items: center; gap: 50px; flex-wrap: wrap; }
+        .badge-item { display: flex; align-items: center; gap: 12px; }
+        .badge-item img { height: 50px; width: auto; }
+        .badge-item span { font-size: 13px; color: var(--gray); font-weight: 500; }
+
+        .about-section { background: var(--white); }
+        .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; align-items: center; }
+        .about-images { display: grid; gap: 15px; }
+        .about-images img { width: 100%; height: 200px; object-fit: cover; border-radius: 4px; }
+        .about-images img:first-child { height: 280px; }
+        .about-content h2 { font-size: 36px; margin-bottom: 20px; }
+        .about-content p { color: var(--gray); margin-bottom: 15px; line-height: 1.8; font-size: 14px; }
+        .about-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-top: 30px; }
+        .about-feature { text-align: center; }
+        .about-feature i { font-size: 28px; color: var(--teal); margin-bottom: 12px; }
+        .about-feature h4 { font-size: 14px; margin-bottom: 4px; }
+        .about-feature p { font-size: 12px; color: var(--gray); margin: 0; }
+
+        .properties-section { background: var(--off-white); }
+        .properties-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .property-card { background: var(--white); border-radius: 4px; overflow: hidden; box-shadow: 0 5px 25px rgba(0,0,0,0.08); transition: transform 0.4s ease, box-shadow 0.4s ease; }
+        .property-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
+        .property-image { position: relative; height: 220px; overflow: hidden; }
+        .property-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .property-card:hover .property-image img { transform: scale(1.08); }
+        .property-badge { position: absolute; top: 15px; left: 15px; background: var(--teal); color: var(--white); padding: 5px 12px; font-size: 9px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-radius: 2px; }
+        .property-info { padding: 20px; }
+        .property-type { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+        .property-name { font-size: 18px; margin-bottom: 12px; line-height: 1.3; }
+        .property-details { display: flex; gap: 18px; margin-bottom: 12px; color: var(--gray); font-size: 12px; }
+        .property-details span { display: flex; align-items: center; gap: 5px; }
+        .property-amenities { display: flex; gap: 12px; margin-bottom: 15px; color: var(--gray); font-size: 11px; flex-wrap: wrap; }
+        .property-amenities i { color: var(--teal); }
+        .property-price { display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 1px solid var(--light-gray); }
+        .price-amount { font-size: 22px; font-weight: 600; color: var(--primary); }
+        .price-period { font-size: 12px; color: var(--gray); }
+        .property-btn { background: var(--accent); color: var(--white); padding: 9px 18px; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border: none; cursor: pointer; transition: all 0.3s ease; border-radius: 2px; }
+        .property-btn:hover { background: var(--teal); }
+
+        .attractions-section { background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%); color: var(--white); }
+        .attractions-section .section-subtitle { color: var(--accent-light); }
+        .attractions-section .section-title { color: var(--white); }
+        .attractions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .attraction-card { position: relative; height: 300px; border-radius: 4px; overflow: hidden; cursor: pointer; }
+        .attraction-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .attraction-card:hover img { transform: scale(1.1); }
+        .attraction-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 25px 20px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
+        .attraction-name { font-size: 18px; margin-bottom: 6px; }
+        .attraction-description { font-size: 12px; color: rgba(255,255,255,0.8); line-height: 1.5; }
+
+        .amenities-section { background: var(--cream); }
+        .amenities-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
+        .amenity-item { text-align: center; padding: 30px 20px; background: var(--white); border-radius: 4px; transition: all 0.4s ease; }
+        .amenity-item:hover { transform: translateY(-5px); box-shadow: 0 12px 35px rgba(0,0,0,0.08); }
+        .amenity-icon { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--teal), var(--accent)); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+        .amenity-icon i { font-size: 24px; color: var(--white); }
+        .amenity-item h4 { font-size: 15px; margin-bottom: 8px; }
+        .amenity-item p { font-size: 12px; color: var(--gray); line-height: 1.6; }
+
+        .testimonials-section { background: linear-gradient(135deg, var(--teal), var(--primary)); color: var(--white); }
+        .testimonial-slider { max-width: 700px; margin: 0 auto; text-align: center; }
+        .testimonial-content { font-size: 20px; font-weight: 300; line-height: 1.8; font-style: italic; margin-bottom: 35px; }
+        .testimonial-author { display: flex; align-items: center; justify-content: center; gap: 18px; }
+        .testimonial-avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+        .testimonial-info h5 { font-size: 15px; margin-bottom: 4px; }
+        .testimonial-info p { font-size: 11px; color: var(--accent-light); letter-spacing: 2px; text-transform: uppercase; }
+
+        .cta-section { background: var(--accent); padding: 80px 0; text-align: center; }
+        .cta-section h2 { font-size: 38px; color: var(--white); margin-bottom: 18px; }
+        .cta-section p { color: rgba(255,255,255,0.9); font-size: 16px; max-width: 550px; margin: 0 auto 35px; }
+        .cta-section .btn-primary { background: var(--white); color: var(--primary); }
+        .cta-section .btn-primary:hover { background: var(--teal); color: var(--white); }
+
+        .contact-section { background: var(--off-white); }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 50px; }
+        .contact-info { padding: 40px; background: var(--white); border-radius: 4px; }
+        .contact-info h3 { font-size: 28px; margin-bottom: 25px; }
+        .contact-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 25px; }
+        .contact-item i { font-size: 20px; color: var(--teal); margin-top: 3px; }
+        .contact-item h4 { font-size: 14px; margin-bottom: 4px; }
+        .contact-item p { font-size: 13px; color: var(--gray); }
+        .contact-item a { color: var(--accent); transition: color 0.3s; }
+        .contact-item a:hover { color: var(--teal); }
+        .contact-map { border-radius: 4px; overflow: hidden; height: 100%; min-height: 400px; }
+        .contact-map iframe { width: 100%; height: 100%; border: none; }
+
+        .footer { background: var(--primary); color: var(--white); padding: 60px 0 25px; }
+        .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 50px; margin-bottom: 45px; }
+        .footer-brand .logo { margin-bottom: 18px; display: inline-block; }
+        .footer-brand p { color: rgba(255,255,255,0.7); line-height: 1.8; margin-bottom: 22px; font-size: 14px; }
+        .footer-social { display: flex; gap: 12px; }
+        .footer-social a { width: 38px; height: 38px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .footer-social a:hover { background: var(--teal); border-color: var(--teal); }
+        .footer-column h4 { font-size: 14px; margin-bottom: 20px; letter-spacing: 1px; }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 10px; }
+        .footer-column ul li a { color: rgba(255,255,255,0.7); font-size: 13px; transition: color 0.3s ease; }
+        .footer-column ul li a:hover { color: var(--accent); }
+        .footer-bottom { padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.6); }
+        .footer-links { display: flex; gap: 25px; }
+        .footer-links a { font-size: 12px; color: rgba(255,255,255,0.6); transition: color 0.3s ease; }
+        .footer-links a:hover { color: var(--accent); }
+
+        .mobile-menu-btn { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1001; }
+        .mobile-menu-btn span { width: 22px; height: 2px; background: var(--white); transition: all 0.3s ease; }
+        .navbar.scrolled .mobile-menu-btn span { background: var(--primary); }
+
+        .scroll-top { position: fixed; bottom: 25px; right: 25px; width: 45px; height: 45px; background: var(--teal); color: var(--white); border: none; border-radius: 50%; cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 999; display: flex; align-items: center; justify-content: center; }
+        .scroll-top.visible { opacity: 1; visibility: visible; }
+        .scroll-top:hover { background: var(--accent); transform: translateY(-5px); }
+
+        @media (max-width: 1100px) {
+            .attractions-grid { grid-template-columns: repeat(2, 1fr); }
+            .amenities-grid { grid-template-columns: repeat(2, 1fr); }
+            .properties-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 992px) {
+            .mobile-menu-btn { display: flex; }
+            .nav-links { position: fixed; top: 0; right: -100%; width: 100%; height: 100vh; background: var(--primary); flex-direction: column; justify-content: center; align-items: center; gap: 25px; transition: right 0.4s ease; }
+            .nav-links.active { right: 0; }
+            .nav-links a { color: var(--white); font-size: 16px; }
+            .about-grid { grid-template-columns: 1fr; gap: 40px; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 35px; }
+            .booking-widget { flex-direction: column; gap: 12px; padding: 20px; width: 85%; }
+            .booking-field { border-right: none; border-bottom: 1px solid var(--light-gray); padding: 12px 0; }
+            .booking-field input, .booking-field select { min-width: 100%; }
+            .booking-submit { padding: 15px; justify-content: center; }
+        }
+
+        @media (max-width: 768px) {
+            .section { padding: 70px 0; }
+            .badges-container { gap: 30px; }
+            .about-features { grid-template-columns: 1fr; }
+            .attractions-grid { grid-template-columns: 1fr; }
+            .amenities-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 15px; text-align: center; }
+            .properties-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 576px) {
+            .hero-cta { flex-direction: column; gap: 12px; }
+            .btn { width: 100%; text-align: center; }
+            .hero { min-height: 600px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <a href="#" class="logo">MERAKI STAYS</a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#properties">Properties</a></li>
+            <li><a href="#attractions">Attractions</a></li>
+            <li><a href="#amenities">Amenities</a></li>
+            <li><a href="#contact" class="nav-cta">Book Now</a></li>
+        </ul>
+        <div class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></div>
+    </nav>
+
+    <section class="hero" id="home">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <p class="hero-subtitle">Luxury Vacation Rentals</p>
+            <h1 class="hero-title">Experience New York<br>Like Never Before</h1>
+            <p class="hero-description">Discover our curated collection of premium vacation rentals, perfectly positioned for easy NYC access while offering serene retreats.</p>
+            <div class="hero-cta">
+                <a href="#properties" class="btn btn-primary">Explore Properties</a>
+                <a href="#about" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+        <div class="booking-widget">
+            <div class="booking-field"><label>Check In</label><input type="date" id="checkIn"></div>
+            <div class="booking-field"><label>Check Out</label><input type="date" id="checkOut"></div>
+            <div class="booking-field"><label>Guests</label><select id="guests"><option value="1">1 Guest</option><option value="2">2 Guests</option><option value="3">3 Guests</option><option value="4">4 Guests</option><option value="5">5 Guests</option><option value="6">6 Guests</option><option value="7">7 Guests</option><option value="8">8 Guests</option></select></div>
+            <div class="booking-field"><label>Property Type</label><select id="propertyType"><option value="">All Properties</option><option value="apartment">Apartment</option><option value="house">Vacation Home</option></select></div>
+            <button class="booking-submit" onclick="window.location.href='https://merakistays.lodgify.com/'"><i class="fas fa-search"></i> Search</button>
+        </div>
+    </section>
+
+    <section class="badges-section">
+        <div class="container">
+            <div class="badges-container">
+                <div class="badge-item"><i class="fas fa-shield-alt" style="font-size:40px;color:var(--teal);"></i><span>Verified Property</span></div>
+                <div class="badge-item"><i class="fas fa-award" style="font-size:40px;color:var(--accent);"></i><span>Premium Selection</span></div>
+                <div class="badge-item"><i class="fas fa-heart" style="font-size:40px;color:#e74c3c;"></i><span>Guest Favorite</span></div>
+                <div class="badge-item"><i class="fas fa-lock" style="font-size:40px;color:var(--teal);"></i><span>Secure Booking</span></div>
+                <div class="badge-item"><i class="fas fa-star" style="font-size:40px;color:var(--accent);"></i><span>5-Star Rated</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section about-section" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-images">
+                    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800" alt="Luxury Interior">
+                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800" alt="Modern Living">
+                </div>
+                <div class="about-content">
+                    <p class="section-subtitle">About Us</p>
+                    <h2>Your Premier Choice for NYC Stays</h2>
+                    <p>Welcome to Meraki Stays, where luxury meets convenience. Our handpicked collection of vacation rentals offers the perfect home away from home.</p>
+                    <p>Each property has been thoughtfully designed to provide maximum comfort and style. From modern apartments with stunning city views to spacious family homes with premium amenities.</p>
+                    <p>Strategically located with easy access to NYC public transportation, our properties offer proximity to world-famous attractions while providing peaceful retreats.</p>
+                    <div class="about-features">
+                        <div class="about-feature"><i class="fas fa-key"></i><h4>Self Check-in</h4><p>Seamless arrival</p></div>
+                        <div class="about-feature"><i class="fas fa-map-marker-alt"></i><h4>Prime Locations</h4><p>Easy NYC access</p></div>
+                        <div class="about-feature"><i class="fas fa-gem"></i><h4>Premium Quality</h4><p>Curated properties</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section properties-section" id="properties">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle">Our Collection</p>
+                <h2 class="section-title">Featured Properties</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="properties-grid">
+                <div class="property-card">
+                    <div class="property-image"><img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600" alt="Modern Verde"><span class="property-badge">Popular</span></div>
+                    <div class="property-info">
+                        <p class="property-type">Apartment</p>
+                        <h3 class="property-name">Modern Verde • Chic 3BR • Easy NYC Commute</h3>
+                        <div class="property-details"><span><i class="fas fa-users"></i> 3 Guests</span><span><i class="fas fa-bed"></i> 2 Beds</span></div>
+                        <div class="property-amenities"><span><i class="fas fa-utensils"></i> Kitchen</span><span><i class="fas fa-wifi"></i> Wifi</span><span><i class="fas fa-tshirt"></i> Washer</span></div>
+                        <div class="property-price"><div><span class="price-amount">$56</span><span class="price-period">/ night</span></div><button class="property-btn" onclick="window.location.href='https://merakistays.lodgify.com/'">Book Now</button></div>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-image"><img src="https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=600" alt="Modern 3BR"><span class="property-badge">Featured</span></div>
+                    <div class="property-info">
+                        <p class="property-type">Apartment</p>
+                        <h3 class="property-name">Modern 3BR/2BA - Easy Walk to NYC Train</h3>
+                        <div class="property-details"><span><i class="fas fa-users"></i> 6 Guests</span><span><i class="fas fa-bed"></i> 3 Beds</span></div>
+                        <div class="property-amenities"><span><i class="fas fa-utensils"></i> Kitchen</span><span><i class="fas fa-wifi"></i> Wifi</span><span><i class="fas fa-tshirt"></i> Washer</span></div>
+                        <div class="property-price"><div><span class="price-amount">$159</span><span class="price-period">/ night</span></div><button class="property-btn" onclick="window.location.href='https://merakistays.lodgify.com/'">Book Now</button></div>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-image"><img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600" alt="Renovated 2BR"></div>
+                    <div class="property-info">
+                        <p class="property-type">Apartment</p>
+                        <h3 class="property-name">Renovated 2BR • Easy Walk to PATH • NYC Access</h3>
+                        <div class="property-details"><span><i class="fas fa-users"></i> 6 Guests</span><span><i class="fas fa-bed"></i> 3 Beds</span></div>
+                        <div class="property-amenities"><span><i class="fas fa-utensils"></i> Kitchen</span><span><i class="fas fa-wifi"></i> Wifi</span><span><i class="fas fa-tshirt"></i> Washer</span></div>
+                        <div class="property-price"><div><span class="price-amount">$177</span><span class="price-period">/ night</span></div><button class="property-btn" onclick="window.location.href='https://merakistays.lodgify.com/'">Book Now</button></div>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-image"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600" alt="Urban Oasis"></div>
+                    <div class="property-info">
+                        <p class="property-type">Apartment</p>
+                        <h3 class="property-name">Urban Oasis • 3BR Duplex w/ Patio • Easy NYC Access</h3>
+                        <div class="property-details"><span><i class="fas fa-users"></i> 8 Guests</span><span><i class="fas fa-bed"></i> 4 Beds</span></div>
+                        <div class="property-amenities"><span><i class="fas fa-utensils"></i> Kitchen</span><span><i class="fas fa-wifi"></i> Wifi</span><span><i class="fas fa-tshirt"></i> Washer</span></div>
+                        <div class="property-price"><div><span class="price-amount">$220</span><span class="price-period">/ night</span></div><button class="property-btn" onclick="window.location.href='https://merakistays.lodgify.com/'">Book Now</button></div>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-image"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600" alt="Private 3BR"><span class="property-badge">Premium</span></div>
+                    <div class="property-info">
+                        <p class="property-type">Vacation Home</p>
+                        <h3 class="property-name">Private 3BR Home • Driveway Parking • 15 min to NYC</h3>
+                        <div class="property-details"><span><i class="fas fa-users"></i> 8 Guests</span><span><i class="fas fa-bed"></i> 5 Beds</span></div>
+                        <div class="property-amenities"><span><i class="fas fa-utensils"></i> Kitchen</span><span><i class="fas fa-wifi"></i> Wifi</span><span><i class="fas fa-tshirt"></i> Washer</span></div>
+                        <div class="property-price"><div><span class="price-amount">$304</span><span class="price-period">/ night</span></div><button class="property-btn" onclick="window.location.href='https://merakistays.lodgify.com/'">Book Now</button></div>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-image"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600" alt="3BR Family"><span class="property-badge">Family</span></div>
+                    <div class="property-info">
+                        <p class="property-type">Apartment</p>
+                        <h3 class="property-name">3BR Family Stay Near NYC | Pool + Free Parking</h3>
+                        <div class="property-details"><span><i class="fas fa-users"></i> 6 Guests</span><span><i class="fas fa-bed"></i> 3 Beds</span></div>
+                        <div class="property-amenities"><span><i class="fas fa-swimming-pool"></i> Pool</span><span><i class="fas fa-wifi"></i> Wifi</span><span><i class="fas fa-tshirt"></i> Washer</span></div>
+                        <div class="property-price"><div><span class="price-amount">$4,670</span><span class="price-period">/ month</span></div><button class="property-btn" onclick="window.location.href='https://merakistays.lodgify.com/'">Book Now</button></div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 40px;"><a href="https://merakistays.lodgify.com/" class="btn btn-primary">View All Properties</a></div>
+        </div>
+    </section>
+
+    <section class="section attractions-section" id="attractions">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle">Explore</p>
+                <h2 class="section-title">Discover NYC Attractions</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="attractions-grid">
+                <div class="attraction-card"><img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=600" alt="Times Square"><div class="attraction-overlay"><h3 class="attraction-name">Times Square</h3><p class="attraction-description">The iconic intersection where the world comes together under dazzling lights.</p></div></div>
+                <div class="attraction-card"><img src="https://images.unsplash.com/photo-1503174971373-b1f69850bded?w=600" alt="Statue of Liberty"><div class="attraction-overlay"><h3 class="attraction-name">Statue of Liberty</h3><p class="attraction-description">America's symbol of freedom, standing tall in New York Harbor.</p></div></div>
+                <div class="attraction-card"><img src="https://images.unsplash.com/photo-1568515387631-8b650bbcd3e4?w=600" alt="Central Park"><div class="attraction-overlay"><h3 class="attraction-name">Central Park</h3><p class="attraction-description">843 acres of urban oasis in the heart of Manhattan.</p></div></div>
+                <div class="attraction-card"><img src="https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=600" alt="Empire State Building"><div class="attraction-overlay"><h3 class="attraction-name">Empire State Building</h3><p class="attraction-description">An Art Deco masterpiece offering panoramic city views.</p></div></div>
+                <div class="attraction-card"><img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=600" alt="Brooklyn Bridge"><div class="attraction-overlay"><h3 class="attraction-name">Brooklyn Bridge</h3><p class="attraction-description">Walk across this iconic suspension bridge connecting Manhattan and Brooklyn.</p></div></div>
+                <div class="attraction-card"><img src="https://images.unsplash.com/photo-1522083165195-3424ed129620?w=600" alt="Manhattan Skyline"><div class="attraction-overlay"><h3 class="attraction-name">Manhattan Skyline</h3><p class="attraction-description">The world's most recognizable skyline, best viewed from across the Hudson.</p></div></div>
+                <div class="attraction-card"><img src="https://images.unsplash.com/photo-1611329857570-f813c5de2e76?w=600" alt="Rockefeller Center"><div class="attraction-overlay"><h3 class="attraction-name">Rockefeller Center</h3><p class="attraction-description">Urban complex featuring Top of the Rock, shopping, and seasonal ice skating.</p></div></div>
+                <div class="attraction-card"><img src="https://images.unsplash.com/photo-1573185502068-b670b4f7d9c0?w=600" alt="The Met"><div class="attraction-overlay"><h3 class="attraction-name">The Metropolitan Museum</h3><p class="attraction-description">One of the world's finest art museums with over 2 million works.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section amenities-section" id="amenities">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle">Why Choose Us</p>
+                <h2 class="section-title">Premium Amenities</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="amenities-grid">
+                <div class="amenity-item"><div class="amenity-icon"><i class="fas fa-wifi"></i></div><h4>High-Speed WiFi</h4><p>Complimentary high-speed internet throughout your stay.</p></div>
+                <div class="amenity-item"><div class="amenity-icon"><i class="fas fa-key"></i></div><h4>Smart Lock</h4><p>Contactless self check-in with secure smart lock entry.</p></div>
+                <div class="amenity-item"><div class="amenity-icon"><i class="fas fa-tshirt"></i></div><h4>In-Unit Laundry</h4><p>Full-size washer and dryer in every property.</p></div>
+                <div class="amenity-item"><div class="amenity-icon"><i class="fas fa-car"></i></div><h4>Free Parking</h4><p>Complimentary parking at select properties.</p></div>
+                <div class="amenity-item"><div class="amenity-icon"><i class="fas fa-broom"></i></div><h4>Professional Cleaning</h4><p>Hotel-standard cleaning before every guest arrival.</p></div>
+                <div class="amenity-item"><div class="amenity-icon"><i class="fas fa-tv"></i></div><h4>Smart TV</h4><p>55"+ smart TVs with streaming services.</p></div>
+                <div class="amenity-item"><div class="amenity-icon"><i class="fas fa-coffee"></i></div><h4>Coffee & Tea</h4><p>Complimentary coffee and tea selection.</p></div>
+                <div class="amenity-item"><div class="amenity-icon"><i class="fas fa-headset"></i></div><h4>24/7 Support</h4><p>Round-the-clock guest support.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section testimonials-section">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle" style="color: var(--accent-light);">Testimonials</p>
+                <h2 class="section-title" style="color: var(--white);">What Our Guests Say</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="testimonial-slider">
+                <p class="testimonial-content">"Absolutely stunning property! The location was perfect for our NYC adventure, and the space was even better than the photos. The check-in process was seamless."</p>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Sarah M." class="testimonial-avatar">
+                    <div class="testimonial-info"><h5>Sarah Mitchell</h5><p>New York, USA</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Experience Luxury Living?</h2>
+            <p>Book your dream vacation rental today and discover why Meraki Stays is the preferred choice for discerning travelers.</p>
+            <a href="https://merakistays.lodgify.com/" class="btn btn-primary">Book Your Stay Now</a>
+        </div>
+    </section>
+
+    <section class="section contact-section" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle">Get In Touch</p>
+                <h2 class="section-title">Contact Us</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Let's Connect</h3>
+                    <div class="contact-item"><i class="fas fa-envelope"></i><div><h4>Email</h4><p><a href="/cdn-cgi/l/email-protection#cca5a2aaa38ca1a9beada7a5bfb8adb5bfe2afa3a1"><span class="__cf_email__" data-cfemail="b2dbdcd4ddf2dfd7c0d3d9dbc1c6d3cbc19cd1dddf">[email&#160;protected]</span></a></p></div></div>
+                    <div class="contact-item"><i class="fas fa-phone"></i><div><h4>Phone</h4><p><a href="tel:+1234567890">+1 (234) 567-890</a></p></div></div>
+                    <div class="contact-item"><i class="fas fa-globe"></i><div><h4>Website</h4><p><a href="https://merakistays.lodgify.com/">merakistays.lodgify.com</a></p></div></div>
+                    <div class="contact-item"><i class="fas fa-clock"></i><div><h4>Availability</h4><p>24/7 Guest Support</p></div></div>
+                </div>
+                <div class="contact-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.15830869428!2d-74.11976397304603!3d40.69766374874431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1647043081248!5m2!1sen!2s" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand"><a href="#" class="logo">MERAKI STAYS</a><p>Premium vacation rentals offering the perfect blend of luxury and convenience for your New York City getaway.</p><div class="footer-social"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-pinterest"></i></a></div></div>
+                <div class="footer-column"><h4>Quick Links</h4><ul><li><a href="#home">Home</a></li><li><a href="#about">About Us</a></li><li><a href="#properties">Properties</a></li><li><a href="#attractions">Attractions</a></li><li><a href="#contact">Contact</a></li></ul></div>
+                <div class="footer-column"><h4>Properties</h4><ul><li><a href="https://merakistays.lodgify.com/">Apartments</a></li><li><a href="https://merakistays.lodgify.com/">Vacation Homes</a></li><li><a href="https://merakistays.lodgify.com/">Family Stays</a></li><li><a href="https://merakistays.lodgify.com/">Monthly Rentals</a></li></ul></div>
+                <div class="footer-column"><h4>Support</h4><ul><li><a href="#">FAQs</a></li><li><a href="#">Cancellation Policy</a></li><li><a href="#">House Rules</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
+            </div>
+            <div class="footer-bottom"><p>© 2024 Meraki Stays. All rights reserved.</p><div class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></div></div>
+        </div>
+    </footer>
+
+    <button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script><script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 100));
+
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        mobileMenuBtn.addEventListener('click', () => navLinks.classList.toggle('active'));
+        document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('active')));
+
+        const scrollTopBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => scrollTopBtn.classList.toggle('visible', window.scrollY > 500));
+        scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => anchor.addEventListener('click', e => { e.preventDefault(); document.querySelector(anchor.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }));
+
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('checkIn').min = today;
+        document.getElementById('checkOut').min = today;
+        document.getElementById('checkIn').addEventListener('change', function() { const checkOutInput = document.getElementById('checkOut'); const selectedDate = new Date(this.value); selectedDate.setDate(selectedDate.getDate() + 1); checkOutInput.min = selectedDate.toISOString().split('T')[0]; });
+    </script>
+
+<script>
+/**
+ * Iframe 元素高亮注入脚本
+ * 需要在目标网站中引入此脚本来支持跨域 iframe 高亮功能
+ *
+ * 使用方法：
+ * 1. 将此脚本添加到目标网站的 HTML 中
+ * 2. 或通过浏览器扩展、用户脚本等方式注入
+ */
+
+(function () {
+  "use strict";
+
+  // 检查是否在 iframe 中
+  if (window.self === window.top) {
+    return; // 不在 iframe 中，不执行
+  }
+
+  // 检查是否已经初始化过
+  if (window.__iframeHighlightInitialized) {
+    return;
+  }
+  window.__iframeHighlightInitialized = true;
+  console.log("Iframe 高亮脚本已加载");
+
+  // 创建高亮覆盖层
+  var overlay = document.createElement("div");
+  overlay.id = "iframe-highlight-overlay";
+  overlay.style.cssText = "\n    position: fixed;\n    top: 0;\n    left: 0;\n    width: 100vw;\n    height: 100vh;\n    pointer-events: none;\n    z-index: 999999;\n    overflow: hidden;\n  ";
+
+  // 创建悬停高亮框（虚线边框）
+  var highlightBox = document.createElement("div");
+  highlightBox.id = "iframe-highlight-box";
+  highlightBox.style.cssText = "\n    position: absolute;\n    border: 2px dashed #007AFF;\n    background: rgba(0, 122, 255, 0.08);\n    pointer-events: none;\n    display: none;\n    transition: all 0.1s ease;\n    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);\n    border-radius: 2px;\n  ";
+
+  // 创建选中节点的常驻高亮框（实线边框）
+  var selectedBox = document.createElement("div");
+  selectedBox.id = "iframe-selected-box";
+  selectedBox.style.cssText = "\n    position: absolute;\n    border: 2px solid #007AFF;\n    pointer-events: none;\n    display: none;\n    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9), 0 0 8px rgba(255, 107, 53, 0.4);\n    border-radius: 2px;\n    z-index: 1000000;\n  ";
+
+  // 创建悬停标签显示
+  var tagLabel = document.createElement("div");
+  tagLabel.id = "iframe-tag-label";
+  tagLabel.style.cssText = "\n    position: absolute;\n    background: #007AFF;\n    color: white;\n    padding: 2px 6px;\n    font-size: 11px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n    border-radius: 2px;\n    pointer-events: none;\n    display: none;\n    white-space: nowrap;\n    z-index: 1000001;\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);\n    font-weight: 500;\n  ";
+
+  // 创建选中节点标签
+  var selectedLabel = document.createElement("div");
+  selectedLabel.id = "iframe-selected-label";
+  selectedLabel.style.cssText = "\n    position: absolute;\n    background: #007AFF;\n    color: white;\n    padding: 3px 8px;\n    font-size: 11px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n    border-radius: 3px;\n    pointer-events: none;\n    display: none;\n    white-space: nowrap;\n    z-index: 1000002;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);\n    font-weight: 600;\n  ";
+  overlay.appendChild(highlightBox);
+  overlay.appendChild(selectedBox);
+  overlay.appendChild(tagLabel);
+  overlay.appendChild(selectedLabel);
+  document.body.appendChild(overlay);
+
+  // 存储当前选中的元素
+  var selectedElement = null;
+  var highlightEnabled = false;
+
+  // 更新选中元素的高亮显示
+  function updateSelectedHighlight(element) {
+    console.log("updateSelectedHighlight called with:", element);
+    if (!element) {
+      selectedBox.style.display = "none";
+      selectedLabel.style.display = "none";
+      selectedElement = null;
+      console.log("Cleared selected highlight");
+      return;
+    }
+    selectedElement = element;
+    var rect = element.getBoundingClientRect();
+    console.log("Selected element rect:", rect);
+
+    // 更新选中高亮框位置
+    selectedBox.style.display = "block";
+    selectedBox.style.left = "".concat(rect.left - 2, "px");
+    selectedBox.style.top = "".concat(rect.top - 2, "px");
+    selectedBox.style.width = "".concat(rect.width + 4, "px");
+    selectedBox.style.height = "".concat(rect.height + 4, "px");
+
+    // 更新选中标签位置和内容
+    selectedLabel.style.display = "block";
+    selectedLabel.textContent = "\u2713 <".concat(element.tagName.toLowerCase(), ">");
+
+    // 计算标签位置，确保不超出视窗
+    var labelTop = rect.top - 28;
+    var labelLeft = rect.left;
+
+    // 如果标签会超出顶部，显示在元素下方
+    if (labelTop < 5) {
+      labelTop = rect.bottom + 5;
+    }
+
+    // 如果标签会超出右侧，向左调整
+    var labelWidth = selectedLabel.offsetWidth || 100; // 预估宽度
+    if (labelLeft + labelWidth > window.innerWidth - 10) {
+      labelLeft = window.innerWidth - labelWidth - 10;
+    }
+    selectedLabel.style.left = "".concat(Math.max(5, labelLeft), "px");
+    selectedLabel.style.top = "".concat(labelTop, "px");
+    console.log("Selected highlight positioned at:", {
+      left: selectedBox.style.left,
+      top: selectedBox.style.top,
+      width: selectedBox.style.width,
+      height: selectedBox.style.height
+    });
+  }
+  function getElementSelector(element) {
+    if (!(element instanceof Element)) throw new Error('Argument must be a DOM element');
+    var segments = [];
+    var current = element;
+    while (current !== document.documentElement) {
+      var selector = '';
+      // 优先检查唯一ID
+      if (current.id && document.querySelectorAll("#".concat(current.id)).length === 1) {
+        segments.unshift("#".concat(current.id));
+        break; // ID唯一，无需继续向上
+      }
+
+      // 生成类名选择器（取第一个有效类名）
+      var classes = Array.from(current.classList).filter(function (c) {
+        return !c.startsWith('js-');
+      });
+      var className = classes.length > 0 ? ".".concat(classes[0]) : '';
+
+      // 生成位置索引（nth-child）
+      var tag = current.tagName.toLowerCase();
+      if (!className) {
+        var siblings = Array.from(current.parentNode.children);
+        var index = siblings.findIndex(function (el) {
+          return el === current;
+        }) + 1;
+        selector = "".concat(tag, ":nth-child(").concat(index, ")");
+      } else {
+        selector = className;
+      }
+      segments.unshift(selector);
+      current = current.parentElement;
+    }
+
+    // 处理根元素
+    if (current === document.documentElement) {
+      segments.unshift('html');
+    }
+    return segments.join(' > ');
+  }
+
+  // 获取元素文本内容
+  function getElementText(element) {
+    var _element$textContent;
+    if (element.tagName === "INPUT") {
+      return element.value || element.placeholder || "";
+    }
+    if (element.tagName === "TEXTAREA") {
+      return element.value || element.placeholder || "";
+    }
+    var text = ((_element$textContent = element.textContent) === null || _element$textContent === void 0 ? void 0 : _element$textContent.trim()) || "";
+    return text.length > 50 ? text.substring(0, 50) + "..." : text;
+  }
+
+  // 获取元素属性信息
+  function getElementAttributes(element) {
+    var attrs = {};
+    for (var i = 0; i < element.attributes.length; i++) {
+      var attr = element.attributes[i];
+      attrs[attr.name] = attr.value;
+    }
+    return attrs;
+  }
+
+  // 鼠标悬停事件处理
+  function handleMouseOver(e) {
+    if (!highlightEnabled) return;
+    var target = e.target;
+    if (!target || target === overlay || target === highlightBox || target === tagLabel || target === selectedBox || target === selectedLabel) {
+      return;
+    }
+
+    // 避免高亮 html 和 body 元素
+    if (target === document.documentElement || target === document.body) {
+      return;
+    }
+
+    // 如果是已选中的元素，不显示悬停高亮
+    if (target === selectedElement) {
+      highlightBox.style.display = "none";
+      tagLabel.style.display = "none";
+      return;
+    }
+    var rect = target.getBoundingClientRect();
+    var selector = getElementSelector(target);
+    var text = getElementText(target);
+    var attributes = getElementAttributes(target);
+
+    // 更新悬停高亮框位置
+    highlightBox.style.display = "block";
+    highlightBox.style.left = "".concat(rect.left - 2, "px");
+    highlightBox.style.top = "".concat(rect.top - 2, "px");
+    highlightBox.style.width = "".concat(rect.width + 4, "px");
+    highlightBox.style.height = "".concat(rect.height + 4, "px");
+
+    // 更新标签位置和内容
+    tagLabel.style.display = "block";
+    tagLabel.textContent = "<".concat(target.tagName.toLowerCase(), ">");
+
+    // 计算标签位置，确保不超出视窗
+    var labelTop = rect.top - 22;
+    var labelLeft = rect.left;
+
+    // 如果标签会超出顶部，显示在元素下方
+    if (labelTop < 0) {
+      labelTop = rect.bottom + 5;
+    }
+
+    // 如果标签会超出右侧，向左调整
+    if (labelLeft + tagLabel.offsetWidth > window.innerWidth) {
+      labelLeft = window.innerWidth - tagLabel.offsetWidth - 5;
+    }
+    tagLabel.style.left = "".concat(Math.max(0, labelLeft), "px");
+    tagLabel.style.top = "".concat(labelTop, "px");
+
+    // 发送消息到父窗口
+    var elementInfo = {
+      tagName: target.tagName.toLowerCase(),
+      rect: {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: rect.width,
+        height: rect.height,
+        x: rect.x,
+        y: rect.y
+      },
+      selector: selector,
+      text: text,
+      attributes: attributes,
+      url: window.location.href,
+      path: window.location.pathname,
+      timestamp: Date.now()
+    };
+    try {
+      window.parent.postMessage({
+        type: "iframe-element-hover",
+        data: elementInfo,
+        source: "iframe-highlight-injector"
+      }, "*");
+    } catch (error) {
+      console.warn("无法发送消息到父窗口:", error);
+    }
+  }
+
+  // 鼠标离开事件处理
+  function handleMouseOut(e) {
+    if (!highlightEnabled) return;
+    var relatedTarget = e.relatedTarget;
+
+    // 如果鼠标移动到高亮相关元素上，不隐藏高亮
+    if (relatedTarget && (relatedTarget === highlightBox || relatedTarget === tagLabel || relatedTarget === overlay || relatedTarget === selectedBox || relatedTarget === selectedLabel)) {
+      return;
+    }
+    highlightBox.style.display = "none";
+    tagLabel.style.display = "none";
+    try {
+      window.parent.postMessage({
+        type: "iframe-element-hover",
+        data: null,
+        source: "iframe-highlight-injector"
+      }, "*");
+    } catch (error) {
+      console.warn("无法发送消息到父窗口:", error);
+    }
+  }
+
+  // 点击事件处理
+  function handleClick(e) {
+    var target = e.target;
+    if (!target || target === overlay || target === highlightBox || target === tagLabel || target === selectedBox || target === selectedLabel) {
+      return;
+    }
+
+    // 避免处理 html 和 body 元素
+    if (target === document.documentElement || target === document.body) {
+      return;
+    }
+
+    // 检查是否是交互元素，这些元素需要保留默认行为
+    var isInteractiveElement = ['input', 'textarea', 'select', 'button', 'a'].includes(target.tagName.toLowerCase());
+
+    // 如果高亮功能启用，对于非交互元素阻止默认行为和事件传播
+    if (highlightEnabled) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    var rect = target.getBoundingClientRect();
+    var selector = getElementSelector(target);
+    var text = getElementText(target);
+    var attributes = getElementAttributes(target);
+    console.log("Element clicked:", {
+      tagName: target.tagName,
+      selector: selector,
+      rect: rect
+    });
+
+    // 立即更新选中高亮
+    updateSelectedHighlight(target);
+
+    // 隐藏悬停高亮，因为现在是选中状态
+    highlightBox.style.display = "none";
+    tagLabel.style.display = "none";
+    var elementInfo = {
+      tagName: target.tagName.toLowerCase(),
+      rect: {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: rect.width,
+        height: rect.height,
+        x: rect.x,
+        y: rect.y
+      },
+      selector: selector,
+      text: text,
+      attributes: attributes,
+      url: window.location.href,
+      path: window.location.pathname,
+      timestamp: Date.now()
+    };
+    try {
+      window.parent.postMessage({
+        type: "iframe-element-click",
+        data: elementInfo,
+        source: "iframe-highlight-injector"
+      }, "*");
+    } catch (error) {
+      console.warn("无法发送消息到父窗口:", error);
+    }
+  }
+
+  // 监听来自父窗口的消息
+  function handleParentMessage(event) {
+    console.log("Received message from parent:", event.data);
+    if (event.data.type === "iframe-highlight-toggle") {
+      var enabled = event.data.enabled;
+      console.log("Highlight toggle:", enabled);
+      if (enabled) {
+        enableHighlight();
+      } else {
+        disableHighlight();
+      }
+    } else if (event.data.type === "enable-iframe-highlight") {
+      console.log("Enable iframe highlight");
+      enableHighlight();
+    } else if (event.data.type === "disable-iframe-highlight") {
+      console.log("Disable iframe highlight");
+      disableHighlight();
+    } else if (event.data.type === "toggle-iframe-highlight") {
+      var _enabled = event.data.enabled !== undefined ? event.data.enabled : !highlightEnabled;
+      console.log("Toggle iframe highlight to:", _enabled);
+      if (_enabled) {
+        enableHighlight();
+      } else {
+        disableHighlight();
+      }
+    } else if (event.data.type === "update-selected-element") {
+      var selector = event.data.selector;
+      console.log("Update selected element with selector:", selector);
+      if (selector) {
+        try {
+          var element = document.querySelector(selector);
+          console.log("Found element by selector:", element);
+          updateSelectedHighlight(element);
+        } catch (error) {
+          console.warn("Failed to select element:", error);
+          updateSelectedHighlight(null);
+        }
+      } else {
+        updateSelectedHighlight(null);
+      }
+    } else if (event.data.type === "clear-selected-element") {
+      console.log("Clear selected element");
+      updateSelectedHighlight(null);
+    }
+  }
+
+  // 启用高亮功能
+  function enableHighlight() {
+    console.log("Enabling highlight");
+    document.addEventListener("mouseover", handleMouseOver, true);
+    document.addEventListener("mouseout", handleMouseOut, true);
+    document.addEventListener("click", handleClick, true);
+    highlightEnabled = true;
+    overlay.style.display = "block";
+  }
+
+  // 禁用高亮功能
+  function disableHighlight() {
+    console.log("Disabling highlight");
+    highlightEnabled = false;
+    // 保持事件监听器，但通过 highlightEnabled 变量控制行为
+    // 这样可以保留选中状态的显示
+    highlightBox.style.display = "none";
+    tagLabel.style.display = "none";
+    // 不隐藏 selectedBox 和 selectedLabel，保留选中状态
+  }
+
+  // 完全禁用高亮功能（移除所有监听器）
+  function fullyDisableHighlight() {
+    console.log("Fully disabling highlight");
+    highlightEnabled = false;
+    document.removeEventListener("mouseover", handleMouseOver, true);
+    document.removeEventListener("mouseout", handleMouseOut, true);
+    document.removeEventListener("click", handleClick, true);
+    overlay.style.display = "none";
+    highlightBox.style.display = "none";
+    tagLabel.style.display = "none";
+    selectedBox.style.display = "none";
+    selectedLabel.style.display = "none";
+  }
+
+  // 添加事件监听
+  enableHighlight();
+  window.addEventListener("message", handleParentMessage);
+
+  // 暴露全局函数供外部调用
+  window.__iframeHighlightControl = {
+    enable: enableHighlight,
+    disable: disableHighlight,
+    fullyDisable: fullyDisableHighlight,
+    isEnabled: function isEnabled() {
+      return highlightEnabled;
+    },
+    getSelectedElement: function getSelectedElement() {
+      return selectedElement;
+    },
+    updateSelected: updateSelectedHighlight,
+    // 通过消息发送开关控制
+    sendToggleMessage: function sendToggleMessage(enabled) {
+      window.parent.postMessage({
+        type: 'iframe-highlight-status',
+        enabled: enabled || highlightEnabled,
+        source: 'iframe-highlight-injector'
+      }, '*');
+    }
+  };
+
+  // 通知父窗口脚本已加载
+  try {
+    window.parent.postMessage({
+      type: "iframe-highlight-ready",
+      data: {
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        timestamp: Date.now()
+      },
+      source: "iframe-highlight-injector"
+    }, "*");
+  } catch (error) {
+    console.warn("无法发送就绪消息到父窗口:", error);
+  }
+
+  // 清理函数
+  window.__iframeHighlightCleanup = function () {
+    fullyDisableHighlight();
+    window.removeEventListener("message", handleParentMessage);
+    if (overlay.parentElement) {
+      overlay.parentElement.removeChild(overlay);
+    }
+    delete window.__iframeHighlightInitialized;
+    delete window.__iframeHighlightCleanup;
+  };
+})();
+
+</script>
+</body>
+</html>
